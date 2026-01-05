@@ -1,0 +1,60 @@
+{
+  "name": "api-tests-serverest",
+  "version": "1.0.0",
+  "description": "Testes automatizados para API REST de gerenciamento de usuários",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-html-reporters"
+  },
+  "keywords": [
+    "api",
+    "testing",
+    "jest",
+    "rest",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-html-reporters": "^3.1.5"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "verbose": true,
+    "testTimeout": 30000,
+    "reporters": [
+      "default",
+      [
+        "jest-html-reporters",
+        {
+          "publicPath": "./reports",
+          "filename": "report.html",
+          "expand": true,
+          "openReport": false
+        }
+      ]
+    ]
+  }
+}
+

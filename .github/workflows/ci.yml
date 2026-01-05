@@ -1,0 +1,66 @@
+name: CI - Testes Automatizados
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Configurar Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Instalar dependências
+      run: npm ci
+
+    - name: Executar testes
+      run: npm test -- --ci --coverage
+
+    - name: Gerar relatório HTML
+      if: always()
+      run: |
+        mkdir -p reports
+        npm test -- --ci --reporters=default --reporters=jest-html-reporters
+
+    - name: Upload relatório de cobertura
+      if: always()
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Upload relatório HTML como artefato
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-report-html-node-${{ matrix.node-version }}
+        path: |
+          reports/
+          coverage/
+        retention-days: 30
+
+    - name: Publicar resumo dos testes
+      if: always()
+      run: |
+        echo "## 📊 Resumo dos Testes" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Testes executados com sucesso!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📁 Relatórios disponíveis nos artefatos" >> $GITHUB_STEP_SUMMARY
+
