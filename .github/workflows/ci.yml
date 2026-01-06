@@ -27,6 +27,11 @@ jobs:
     - name: Instalar dependências
       run: npm ci
 
+    - name: Instalar Allure CLI
+      if: always()
+      run: |
+        npm install -g allure-commandline || true
+
     - name: Executar testes
       run: npm test -- --ci --coverage
 
@@ -35,6 +40,15 @@ jobs:
       run: |
         mkdir -p reports
         npm test -- --ci --reporters=default --reporters=jest-html-reporters
+
+    - name: Executar testes com Allure
+      if: always()
+      run: npm run test:allure -- --ci
+
+    - name: Gerar relatório Allure
+      if: always()
+      run: |
+        npm run allure:generate || true
 
     - name: Upload relatório de cobertura
       if: always()
@@ -53,6 +67,16 @@ jobs:
         path: |
           reports/
           coverage/
+        retention-days: 30
+
+    - name: Upload relatório Allure como artefato
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-report-node-${{ matrix.node-version }}
+        path: |
+          allure-report/
+          allure-results/
         retention-days: 30
 
     - name: Publicar resumo dos testes

@@ -35,6 +35,7 @@ Este projeto implementa testes automatizados para uma API REST que gerencia oper
 - **Axios** - Cliente HTTP para requisições
 - **dotenv** - Gerenciamento de variáveis de ambiente
 - **jest-html-reporters** - Geração de relatórios HTML
+- **Allure** - Relatórios detalhados com métricas de testes
 - **GitHub Actions** - Pipeline de CI/CD
 
 ## 📁 Estrutura do Projeto
@@ -128,6 +129,22 @@ npm run test:coverage
 
 ```bash
 npm run test:ci
+```
+
+### Executar Testes com Allure
+
+```bash
+# Executa os testes e gera resultados do Allure
+npm run test:allure
+
+# Gera o relatório HTML do Allure
+npm run allure:generate
+
+# Abre o relatório no navegador
+npm run allure:open
+
+# Ou serve o relatório diretamente (gera e abre)
+npm run allure:serve
 ```
 
 ## 📊 Cobertura de Testes
@@ -234,7 +251,42 @@ A pipeline está definida em `.github/workflows/ci.yml` e executa:
 
 ## 📈 Relatórios
 
-### Relatórios HTML
+### Relatórios Allure (Recomendado)
+
+O **Allure** fornece relatórios detalhados com métricas avançadas, gráficos e análises dos testes.
+
+#### Gerar e Visualizar Relatório Allure
+
+```bash
+# 1. Execute os testes com Allure
+npm run test:allure
+
+# 2. Gere o relatório HTML
+npm run allure:generate
+
+# 3. Abra o relatório no navegador
+npm run allure:open
+
+# OU use o comando único que faz tudo:
+npm run allure:serve
+```
+
+#### O que o Allure oferece:
+
+- 📊 **Métricas detalhadas**: Taxa de sucesso, tempo de execução, tendências
+- 📈 **Gráficos e estatísticas**: Distribuição de testes, histórico de execuções
+- 🔍 **Análise de falhas**: Stack traces, screenshots (quando aplicável), logs
+- 📋 **Categorização**: Testes agrupados por suítes, features, stories
+- ⏱️ **Performance**: Tempo de execução de cada teste
+- 🎯 **Cobertura**: Visualização da cobertura de código
+
+Os relatórios são gerados em:
+```
+allure-report/        # Relatório HTML gerado
+allure-results/       # Resultados brutos dos testes
+```
+
+### Relatórios HTML (Jest HTML Reporters)
 
 Após executar os testes, os relatórios HTML são gerados em:
 
@@ -268,8 +320,22 @@ Na pipeline CI/CD, os relatórios são disponibilizados como **artefatos**:
 
 1. Acesse a execução da pipeline no GitHub
 2. Role até a seção **Artifacts**
-3. Baixe o arquivo `test-report-html-node-<version>`
-4. Extraia e abra `reports/report.html`
+3. Baixe os arquivos:
+   - `test-report-html-node-<version>` - Relatório HTML do Jest
+   - `allure-report-node-<version>` - Relatório Allure completo
+4. Extraia e visualize os relatórios
+
+**Nota**: Para visualizar o relatório Allure localmente após baixar:
+```bash
+# Extraia o artefato
+unzip allure-report-node-*.zip
+
+# Gere o relatório (se necessário)
+npm run allure:generate
+
+# Abra o relatório
+npm run allure:open
+```
 
 ## 🔧 Configurações Avançadas
 

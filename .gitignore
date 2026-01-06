@@ -3,6 +3,8 @@ node_modules/
 .env.local
 coverage/
 reports/
+allure-results/
+allure-report/
 *.log
 .DS_Store
 .idea/
